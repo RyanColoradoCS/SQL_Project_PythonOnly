@@ -4,6 +4,8 @@ account_id = 0
 email_id = 0
 product_id = 0
 transaction_id = 0
+email_id_counter = 0
+receipt_id = 0
 
 # Base User Class
 class User:
@@ -65,12 +67,15 @@ class Customer(User):
             self.bank_account = bank_account
         else:
             raise Exception("This customer already has a bank account.")
-    
-    # This has not been updated yet
-    def set_bank_account(self, new_bank_account):
-        """Update bank account for the customer."""
-        print(f"New account: {new_bank_account}")
         
+    def remove_bank_account(self):
+        """Remove the bank account from the customer."""
+        if self.bank_account is None:
+            raise Exception("This customer has no bank account to remove.")
+        else:
+            removed_account = self.bank_account  # Store for message
+            self.bank_account = None  # Clear the bank account
+            print(f"Removed bank account {removed_account.account_number} for {self.name}.")
 
     def add_transaction(self, transaction):
         """Add a transaction to the customer"""
@@ -84,7 +89,7 @@ class BankAccount:
         
         global account_id  # Declare the global account_id
         account_id += 1
-        self.account_id = account_id
+
         self.user = user
         self.bank_name = bank_name
         self.account_number = account_number
@@ -99,9 +104,10 @@ class TransactionEmail:
         if transaction is None:
             raise ValueError("Transaction cannot be None")
 
-        global email_id_counter
-        self.email_id = email_id_counter
-        email_id_counter += 1
+        global email_id
+        email_id += 1
+        self.email_id = email_id  # Assign to the instance
+        
         self.user = user  # Store the User object
         self.transaction = transaction # Store the Transaction object
         self.email_content = email_content
@@ -113,6 +119,7 @@ class TransactionEmail:
 
 class Product:
     def __init__(self, name, manufacturer, product_type, price, shipping_cost, labor_overhead):
+        
         global product_id
         product_id += 1
         self.product_id = product_id
@@ -123,24 +130,34 @@ class Product:
         self.price = price
         self.shipping_cost = shipping_cost
         self.labor_overhead = labor_overhead
+        
+    def __str__(self):
+        return f"Product {self.product_id}: {self.name} ({self.product_type}) by {self.manufacturer}"
 
 class Transaction:
     def __init__(self, user, product, transaction_type):
         global transaction_id
-        transaction_id = transaction_id
+        transaction_id += 1
+        self.transaction_id = transaction_id  # Assign to the instance
+
         self.user = user
         self.product = product
         self.transaction_type = transaction_type
         user.add_transaction(self)
 
     def process_transaction(self):
-        print(f"Processing {self.transaction_type} for {self.product.name} for user {self.user.name}")
+        print(f"Processing transaction id {transaction_id} type {self.transaction_type} for {self.product.name} for user {self.user.name}")
 
+# this needs error checking added
 class Receipt:
-    def __init__(self, receipt_id, transaction):
+    def __init__(self, transaction, user):
+        global receipt_id
+        receipt_id += 1
         self.receipt_id = receipt_id
+        
         self.transaction = transaction
-
+        self.user = user
+        
     def generate_receipt(self):
         print(f"Receipt #{self.receipt_id} for transaction {self.transaction.transaction_id}")
 
