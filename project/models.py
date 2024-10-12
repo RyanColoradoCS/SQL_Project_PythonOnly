@@ -51,6 +51,8 @@ class Admin(User):
         super().__init__(username, name, password, email)
         self.admin_status = True
 
+    # this will have admin rights and functions added later
+    
 # Customer Class
 class Customer(User):
     """Customer account for the website"""
@@ -59,14 +61,15 @@ class Customer(User):
         super().__init__(username, name, password, email)
         self.physical_address = physical_address
         self.bank_account = None
-        self.transactions = []
+        self.transactions = [] # user can have multiple transactions
 
-    def set_bank_account(self, bank_account):
-        """Assign the bank account to the customer. Ensure only one account is allowed."""
+    def set_bank_account(self, new_bank_account):
+        """Assign or update the customer's bank account."""
         if self.bank_account is None:
-            self.bank_account = bank_account
+            print(f"Assigned new bank account {new_bank_account.account_number} to {self.name}.")
         else:
-            raise Exception("This customer already has a bank account.")
+            print(f"Updated bank account to {new_bank_account.account_number} for {self.name}.")
+        self.bank_account = new_bank_account
         
     def remove_bank_account(self):
         """Remove the bank account from the customer."""
@@ -79,9 +82,20 @@ class Customer(User):
 
     def add_transaction(self, transaction):
         """Add a transaction to the customer"""
-        self.transactions.append(transaction)
+        if transaction not in self.transactions:
+            print(f"Added transaction {transaction.transaction_id} for {self.name}.")
+            self.transactions.append(transaction)
+        else:
+            print(f"Unable to add transaction id: {transaction.transaction_id} because it already exists for {self.name}.")
 
+    def print_transactions(self):
+        print(f"Printing all transactions for {self.name}:")
+        for transaction in self.transactions:
+            print(f"Transaction ID: {transaction.transaction_id}, "
+                f"Type: {transaction.transaction_type}, "
+                f"Product: {transaction.product.name}")
 
+        
 class BankAccount:
     def __init__(self, user, bank_name, account_number):
         if user is None:
@@ -136,6 +150,12 @@ class Product:
 
 class Transaction:
     def __init__(self, user, product, transaction_type):
+        
+        if product is None:
+            raise ValueError("Product cannot be None.")
+        if user is None:
+            raise ValueError("User cannot be None.")
+
         global transaction_id
         transaction_id += 1
         self.transaction_id = transaction_id  # Assign to the instance
@@ -143,14 +163,23 @@ class Transaction:
         self.user = user
         self.product = product
         self.transaction_type = transaction_type
-        user.add_transaction(self)
+        # Add this transaction instance to the user's transactions list
+        self.user.add_transaction(self)
 
     def process_transaction(self):
-        print(f"Processing transaction id {transaction_id} type {self.transaction_type} for {self.product.name} for user {self.user.name}")
+        print(f"Processing transaction id {self.transaction_id} type {self.transaction_type} "
+            f"for {self.product.name} for user {self.user.name}")
 
-# this needs error checking added
 class Receipt:
     def __init__(self, transaction, user):
+        
+        if transaction is None:
+            raise ValueError("Transaction cannot be None.")
+        if user is None:
+            raise ValueError("User cannot be None.")
+        if transaction.user != user:
+            raise ValueError("Transaction user does not match the provided user.")
+        
         global receipt_id
         receipt_id += 1
         self.receipt_id = receipt_id
