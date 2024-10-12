@@ -31,5 +31,12 @@ class TestUser(unittest.TestCase):
         user.login("wrongpassword")
         self.assertFalse(user.logged_in, "User should not be logged in with incorrect password")
 
+    def test_logout(self):
+        user = User("Joe Smith", "Joe Smith", "password123", "joe.smith@example.com")
+        user.login("password123")
+        user.logout()
+        self.assertFalse(user.logged_in, "User should not be logged in after logging out")
+
+    
 if __name__ == '__main__':
     unittest.main()

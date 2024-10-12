@@ -40,6 +40,7 @@ class User:
     
     def logout(self):
         self.logged_in = False
+        print(f"User {self.username} is now logged out.")
 
 # Admin Class
 class Admin(User):
@@ -92,13 +93,13 @@ class TransactionEmail:
     """Email class to manage email sending."""
     
     def __init__(self, user, transaction, email_content):
-        global email_id_counter
 
         if user is None:
             raise ValueError("User cannot be None")
         if transaction is None:
             raise ValueError("Transaction cannot be None")
 
+        global email_id_counter
         self.email_id = email_id_counter
         email_id_counter += 1
         self.user = user  # Store the User object
@@ -115,6 +116,7 @@ class Product:
         global product_id
         product_id += 1
         self.product_id = product_id
+        
         self.name = name
         self.manufacturer = manufacturer
         self.product_type = product_type
@@ -123,8 +125,9 @@ class Product:
         self.labor_overhead = labor_overhead
 
 class Transaction:
-    def __init__(self, transaction_id, user, product, transaction_type):
-        self.transaction_id = transaction_id
+    def __init__(self, user, product, transaction_type):
+        global transaction_id
+        transaction_id = transaction_id
         self.user = user
         self.product = product
         self.transaction_type = transaction_type
