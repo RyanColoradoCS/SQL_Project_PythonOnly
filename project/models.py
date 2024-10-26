@@ -130,7 +130,7 @@ class BankAccount:
         
         global account_id  # Declare the global account_id
         account_id += 1
-        self.account_id
+        self.account_id = account_id
 
         self.user = user
         self.bank_name = bank_name
