@@ -1,3 +1,5 @@
+import json
+
 # Initialize globals
 user_id = 0
 account_id = 0
@@ -43,6 +45,16 @@ class User:
     def logout(self):
         self.logged_in = False
         print(f"User {self.username} is now logged out.")
+        
+    def to_dict(self):
+        return {
+            "user_id": self.user_id,
+            "username": self.username,
+            "name": self.name,
+            "email": self.email,
+            "admin_status": self.admin_status,
+            "logged_in": self.logged_in
+        }
 
 # Admin Class
 class Admin(User):
@@ -50,6 +62,11 @@ class Admin(User):
     def __init__(self, username, name, password, email):
         super().__init__(username, name, password, email)
         self.admin_status = True
+    
+    def to_dict(self):
+        data = super().to_dict()
+        data["admin_status"] = True
+        return data
 
     # this will have admin rights and functions added later
     
@@ -94,7 +111,17 @@ class Customer(User):
             print(f"Transaction ID: {transaction.transaction_id}, "
                 f"Type: {transaction.transaction_type}, "
                 f"Product: {transaction.product.name}")
-
+    '''
+    This makes the data a dictionary for use in JSON. Using ** in front of super().to_dict() unpacks 
+    the dictionary and merges its key-value pairs directly into the new dictionary, resulting in a flat structure.
+    '''
+    def to_dict(self):
+        return {
+            **super().to_dict(),
+            "physical_address": self.physical_address,
+            "bank_account": self.bank_account.to_dict() if self.bank_account else None,
+            "transactions": [t.to_dict() for t in self.transactions]
+        }
         
 class BankAccount:
     def __init__(self, user, bank_name, account_number):
@@ -103,10 +130,20 @@ class BankAccount:
         
         global account_id  # Declare the global account_id
         account_id += 1
+        self.account_id
 
         self.user = user
         self.bank_name = bank_name
         self.account_number = account_number
+        
+    def to_dict(self):
+        return {
+            "account_id" : self.account_id,
+            "user": self.user,
+            "bank_name": self.bank_name,
+            "account_number": self.account_number
+            
+        }
 
 class TransactionEmail:
     """Email class to manage email sending."""
@@ -130,6 +167,14 @@ class TransactionEmail:
         # Use the user object to send the email
         print(f"Sending email to {self.user.email} about transaction {self.transaction.transaction_id}")
         print(f"Content: {self.email_content}")
+    
+    def to_dict(self):
+        return {
+            "email_id" : self.email_id ,
+            "user" : self.user,
+            "transaction" : self.transaction,
+            "email_content" : self.email_content
+        }
 
 class Product:
     def __init__(self, name, manufacturer, product_type, price, shipping_cost, labor_overhead):
@@ -147,6 +192,17 @@ class Product:
         
     def __str__(self):
         return f"Product {self.product_id}: {self.name} ({self.product_type}) by {self.manufacturer}"
+
+    def to_dict(self):
+        return {
+            "product_id": self.product_id,
+            "name": self.name,
+            "manufacturer": self.manufacturer,
+            "product_type": self.product_type,
+            "price": self.price,
+            "shipping_cost": self.shipping_cost,
+            "labor_overhead": self.labor_overhead
+        }
 
 class Transaction:
     def __init__(self, user, product, transaction_type):
@@ -169,6 +225,14 @@ class Transaction:
     def process_transaction(self):
         print(f"Processing transaction id {self.transaction_id} type {self.transaction_type} "
             f"for {self.product.name} for user {self.user.name}")
+    
+    def to_dict(self):
+        return {
+            "transaction_id": self.transaction_id,
+            "user": self.user.user_id,
+            "product": self.product.product_id,
+            "transaction_type": self.transaction_type
+        }
 
 class Receipt:
     def __init__(self, transaction, user):
@@ -189,5 +253,15 @@ class Receipt:
         
     def generate_receipt(self):
         print(f"Receipt #{self.receipt_id} for transaction {self.transaction.transaction_id}")
+    
+    def to_dict(self):
+        return {
+            "receipt_id": self.receipt_id,
+            "transaction": self.transaction.transaction_id,
+            "user": self.user.user_id
+        }
 
-        
+# Function to save dictionary data to JSON
+def save_to_json(data, filename='data.json'):
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
