@@ -1,0 +1,30 @@
+{
+    "user_id": 1,
+    "username": "johncustomer",
+    "name": "John Customer",
+    "email": "john@gmail.com",
+    "admin_status": false,
+    "logged_in": true,
+    "physical_address": "123 Main St",
+    "bank_account": null,
+    "transactions": [
+        {
+            "transaction_id": 1,
+            "user": 1,
+            "product": 1,
+            "transaction_type": "Purchase"
+        },
+        {
+            "transaction_id": 2,
+            "user": 1,
+            "product": 1,
+            "transaction_type": "Purchase"
+        },
+        {
+            "transaction_id": 3,
+            "user": 1,
+            "product": 2,
+            "transaction_type": "Purchase"
+        }
+    ]
+}

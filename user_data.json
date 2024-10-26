@@ -1,0 +1,11 @@
+{
+    "user_id": 1,
+    "username": "johncustomer",
+    "name": "John Customer",
+    "email": "john@gmail.com",
+    "admin_status": false,
+    "logged_in": false,
+    "physical_address": "123 Main St",
+    "bank_account": null,
+    "transactions": []
+}

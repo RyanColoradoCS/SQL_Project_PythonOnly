@@ -1,0 +1,8 @@
+Add a check that the user has a bank account
+
+Handling for purchase or return transactions
+
+GUI initial setup where user logs initial
+
+Specal admin screen on GUI
+

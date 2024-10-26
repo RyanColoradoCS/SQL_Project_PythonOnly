@@ -42,9 +42,12 @@ class User:
         else:
             print(f"Incorrect password for user {self.username}.")
     
+    # logs user out and updates dictionary/database
     def logout(self):
         self.logged_in = False
+        data = self.to_dict()
         print(f"User {self.username} is now logged out.")
+        return data
         
     def to_dict(self):
         return {
@@ -211,6 +214,7 @@ class Transaction:
             raise ValueError("Product cannot be None.")
         if user is None:
             raise ValueError("User cannot be None.")
+        # Needs error checking to check if they have a bank account
 
         global transaction_id
         transaction_id += 1
@@ -260,8 +264,3 @@ class Receipt:
             "transaction": self.transaction.transaction_id,
             "user": self.user.user_id
         }
-
-# Function to save dictionary data to JSON
-def save_to_json(data, filename='data.json'):
-    with open(filename, 'w') as json_file:
-        json.dump(data, json_file, indent=4)

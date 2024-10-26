@@ -28,7 +28,8 @@ class App:
         label = tk.Label(self.login_frame, text="Welcome to Kinsey's Store!")
         label.grid(row=0, column=0, columnspan=2, padx=10, pady=5)
 
-        # Creating a label for username
+        # Creating
+        # a label for username
         tk.Label(self.login_frame, text="Username:").grid(row=1, column=0, padx=10, pady=5)
         # Create a label for password
         tk.Label(self.login_frame, text="Password:").grid(row=2, column=0, padx=10, pady=5)

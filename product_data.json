@@ -1,0 +1,9 @@
+{
+    "product_id": 1,
+    "name": "Laptop",
+    "manufacturer": "TechCorp",
+    "product_type": "Electronics",
+    "price": 1200,
+    "shipping_cost": 50,
+    "labor_overhead": 100
+}
